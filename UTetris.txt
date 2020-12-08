@@ -1,0 +1,466 @@
+# include "iGraphics.h"
+#include <stdio.h>
+#include <string.h>
+
+int width, height, x = 500, y = 680, finalx, finaly, i, tetris_num = 1, score, k, j;
+int array_nextcolor1[3], array_nextcolor2[3], array_nextcolor3[3], array_nextcolor4[3], array_presentcolor1[3], array_presentcolor2[3], array_presentcolor3[3], array_blackcolor[3] = { 0, 0, 0 };
+int arr_x[200], arr_y[200], arr_position[200], index = 0; //Notice me senpai Nowrin
+int dx, dy, tmp = 1, gameover, array_checkxycolor[3]; //NOOOWWWRIIIIIIIIIIIIIINNNNNN
+
+void SetTetrisCoordinate(int X, int Y, int Index, int Tmp){
+	//HIII NOWRIN 
+	if (Y >= 675) gameover = 1;
+	else gameover = 0;
+	arr_x[Index] = X;
+	arr_y[Index] = Y;
+	arr_position[Index] = Tmp;
+	x = 500; y = 680; dy = 1;
+	tetris_num += 1;
+	index += 1;
+	//BYEE NOWRIN
+}
+
+
+
+//All set tetrises
+void SetTetrisL(int Index){
+	if (arr_position[Index] == 1){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//LTetris1.bmp");
+	}
+
+	if (arr_position[Index] == 2){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//LTetris4.bmp");
+	}
+}
+void SetTetrisI(int Index){
+
+	if (arr_position[Index] == 1){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//ITetris1.bmp");
+	}
+
+	if (arr_position[Index] == 2){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//ITetris2.bmp");
+	}
+
+}
+
+void SetTetrisJ(int Index){
+
+	if (arr_position[Index] == 1){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//JTetris1.bmp");
+	}
+
+	if (arr_position[Index] == 2){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//JTetris4.bmp");
+	}
+
+}
+void SetTetrisO(int Index){
+	if (arr_position[Index] == 1){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//OTetris.bmp");
+	}
+	if (arr_position[Index] == 2){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//OTetris.bmp");
+	}
+
+}
+
+void SetTetrisT(int Index){
+	if (arr_position[Index] == 1){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//UTetris1.bmp");//nowriiiiin
+	}
+	if (arr_position[Index] == 2){
+		iShowBMP(arr_x[Index], arr_y[Index], "Images//UTetris2.bmp");//nowriiiiiin
+	}
+
+}
+
+//All moving tetrises
+void TetrisL(int X, int Y){
+	if (tmp == 1){
+		width = 40;
+		iShowBMP(X, Y, "Images//LTetris1.bmp");
+	}
+
+	if (tmp == 2){
+		width = 60;
+		iShowBMP(X, Y, "Images//LTetris4.bmp");
+	}
+
+}
+void TetrisI(int X, int Y){
+
+	if (tmp == 1){
+		width = 80;
+		iShowBMP(X, Y, "Images//ITetris1.bmp");
+	}
+
+	if (tmp == 2){
+		width = 20;
+		iShowBMP(X, Y, "Images//ITetris2.bmp");
+	}
+
+}
+
+void TetrisJ(int X, int Y){
+
+	if (tmp == 1){
+		width = 60;
+		iShowBMP(X, Y, "Images//JTetris1.bmp");
+	}
+
+	if (tmp == 2){
+		width = 40;
+		iShowBMP(X, Y, "Images//JTetris4.bmp");
+	}
+
+}
+
+
+void TetrisO(int X, int Y){
+	if (tmp == 1){
+		width = 40;
+		iShowBMP(X, Y, "Images//OTetris.bmp");
+	}
+	if (tmp == 2){
+		width = 40;
+		iShowBMP(X, Y, "Images//OTetris.bmp");
+	}
+}
+
+void TetrisT(int X, int Y){
+	if (tmp == 1){
+		width = 60;
+		iShowBMP(X, Y, "Images//UTetris1.bmp"); // lookit
+	}
+	if (tmp == 2){
+		width = 40;
+		iShowBMP(X, Y, "Images//UTetris2.bmp");//ovaaaaaaaah heeere
+	}
+}
+
+int movedown(int moveX, int moveY){
+	int pixel = -1;
+	iGetPixelColor(moveX + 10, moveY - 1, array_nextcolor1);
+	iGetPixelColor(moveX + 20, moveY - 1, array_nextcolor2);
+	iGetPixelColor(moveX + 40, moveY - 1, array_nextcolor3);
+	iGetPixelColor(moveX + 60, moveY - 1, array_nextcolor4);
+	if (width == 20){
+		for (i = 0; i < 3; i++){
+			if (array_nextcolor1[i] == array_blackcolor[i]) pixel = 1;
+			else pixel = 0;
+		}
+	}
+	if (width == 40){
+		for (i = 0; i < 3; i++){
+			if ((array_nextcolor1[i] == array_blackcolor[i]) && (array_nextcolor2[i] == array_blackcolor[i])) pixel = 1;
+			else pixel = 0;
+		}
+	}
+	if (width == 60){
+		for (i = 0; i < 3; i++){
+			if ((array_nextcolor1[i] == array_blackcolor[i]) && (array_nextcolor2[i] == array_blackcolor[i])){
+				if (array_nextcolor3[i] == array_blackcolor[i]) pixel = 1;
+				else pixel = 0;
+			}
+			else pixel = 0;
+		}
+	}
+	if (width == 80){
+		for (i = 0; i < 3; i++){
+			if ((array_nextcolor1[i] == array_blackcolor[i]) && (array_nextcolor2[i] == array_blackcolor[i])){
+				if ((array_nextcolor3[i] == array_blackcolor[i]) && (array_nextcolor4[i] == array_blackcolor[i]))
+					pixel = 1;
+				else pixel = 0;
+			}
+			else pixel = 0;
+		}
+	}
+	return pixel;
+}
+// checks pixel color underneath block... returns 1 if its black and 0 if not
+
+/*
+function iDraw() is called again and again by the system.
+*/
+
+void iDraw()
+{
+	//place your drawing codes here
+	iClear();
+
+	//to test if currently moving tetris is stopped by obstacle...not included in actual code
+	//note - set tetrises need to run BEFORE the currently moving tetrises
+
+
+	//HIIIIIIIIIIIIII NOWRIN
+	if (tetris_num == 1) {
+		TetrisL(x, y);
+		iShowBMP(800, 350, "Images//JTetris1.bmp");
+	}
+	if (tetris_num >= 2) SetTetrisL(0);
+	if (tetris_num == 2 ) {
+		TetrisJ(x, y);
+		iShowBMP(800, 350, "Images//OTetris.bmp");
+	}
+	if (tetris_num >= 3) SetTetrisJ(1);
+	if (tetris_num == 3){
+		TetrisO(x, y);
+		iShowBMP(800, 350, "Images//UTetris1.bmp"); //nooooowriiiiiiiin
+	}
+	if (tetris_num >= 4) SetTetrisO(2);
+	if (tetris_num == 4){
+		TetrisT(x, y);
+		iShowBMP(800, 350, "Images//ITetris1.bmp");
+	}
+	if (tetris_num >= 5) SetTetrisT(3);
+	if (tetris_num == 5){
+		TetrisI(x, y);
+		iShowBMP(800, 350, "Images//LTetris1.bmp");
+	}
+	if (tetris_num >= 6) SetTetrisI(4);
+	if (tetris_num == 6) {
+		TetrisL(x, y);
+		iShowBMP(800, 350, "Images//JTetris1.bmp");
+	}
+	if (tetris_num >= 7) SetTetrisL(5);
+	if (tetris_num == 7) {
+		TetrisJ(x, y);
+		iShowBMP(800, 350, "Images//OTetris.bmp");
+	}
+	if (tetris_num >= 8) SetTetrisJ(6);
+	if (tetris_num == 8){
+		TetrisO(x, y);
+		iShowBMP(800, 350, "Images//UTetris1.bmp"); // nowwriiiiin
+	}
+	if (tetris_num >= 9) SetTetrisO(7);
+	if (tetris_num == 9){
+		TetrisT(x, y);
+		iShowBMP(800, 350, "Images//ITetris1.bmp");
+	}
+	if (tetris_num >= 10) SetTetrisT(8);
+	if (tetris_num == 10){
+		TetrisI(x, y);
+		iShowBMP(800, 350, "Images//JTetris1.bmp");
+	}
+	if (tetris_num >= 11) SetTetrisI(9);
+	if (tetris_num == 11) {
+		TetrisJ(x, y);
+		iShowBMP(800, 350, "Images//OTetris.bmp");
+	}
+	if (tetris_num >= 12) SetTetrisJ(10);
+	if (tetris_num == 12){
+		TetrisO(x, y);
+		iShowBMP(800, 350, "Images//UTetris1.bmp");
+	}
+	if (tetris_num >= 13) SetTetrisO(11);
+	if (tetris_num == 13){
+		TetrisT(x, y);
+		iShowBMP(800, 350, "Images//ITetris1.bmp");
+	}
+	if (tetris_num >= 14) SetTetrisT(12);
+	if (tetris_num == 14){
+		TetrisI(x, y);
+		iShowBMP(800, 350, "Images//LTetris1.bmp");
+	}
+	if (tetris_num >= 15) SetTetrisI(13);
+	if (tetris_num == 15) {
+		TetrisL(x, y);
+		iShowBMP(800, 350, "Images//JTetris1.bmp");
+	}
+	if (tetris_num >= 16) SetTetrisL(14);
+	if (tetris_num == 16) {
+		TetrisJ(x, y);
+		iShowBMP(800, 350, "Images//OTetris.bmp");
+	}
+	if (tetris_num >= 17) SetTetrisJ(15);
+	if (tetris_num == 17){
+		TetrisO(x, y);
+		iShowBMP(800, 350, "Images//UTetris1.bmp");//nooooowwwriiiiiiin
+	}
+	if (tetris_num >= 18) SetTetrisO(16);
+	if (tetris_num == 18){
+		TetrisT(x, y);
+		iShowBMP(800, 350, "Images//ITetris1.bmp");
+	}
+	if (tetris_num >= 19) SetTetrisT(17);
+	if (tetris_num == 19){
+		TetrisI(x, y);
+		iShowBMP(800, 350, "Images//LTetris1.bmp");
+	}
+
+	for (i = 0, j = 19, k = 18; i <= 200; i++, j += 6, k += 6){
+		if (tetris_num == 1 + j) {
+			TetrisL(x, y);
+			iShowBMP(800,350, "Images//JTetris1.bmp");
+		}
+		if (tetris_num >= 2 + j) SetTetrisL(0 + k);
+		if (tetris_num == 2 + j) {
+			TetrisJ(x, y);
+			iShowBMP(800, 350, "Images//OTetris.bmp");
+		}
+		if (tetris_num >= 3 + j) SetTetrisJ(1 + k);
+		if (tetris_num == 3 + j){
+			TetrisO(x, y);
+			iShowBMP(800, 350, "Images//UTetris1.bmp");
+		}
+		if (tetris_num >= 4 + j) SetTetrisO(2 + k);
+		if (tetris_num == 4 + j){
+			TetrisT(x, y);
+			iShowBMP(800, 350, "Images//ITetris1.bmp");
+		}
+		if (tetris_num >= 5 + j) SetTetrisT(3 + k);
+		if (tetris_num == 5 + j){
+			TetrisI(x, y);
+			iShowBMP(800, 350, "Images//LTetris1.bmp");
+		}
+		if (tetris_num >= 6 + j) SetTetrisI(4 + k);
+	}
+
+	//screen images
+	iShowBMP(750, 500, "Images//Logo.bmp");
+
+	iSetColor(10, 50, 255);
+	iRectangle(299, 0, 400, 700); //gamescreen
+
+	iShowBMP(50, 290, "Images//Border.bmp");
+	iSetColor(255, 255, 255);
+	iText(70, 400, "Score: 0"); //score box
+
+	
+	iSetColor(255, 255, 255);
+	iText(780, 420, "Next:"); //next block
+
+	iSetColor(255, 255, 255);
+	iText(15, 100, "Press p for pause.");
+	iSetColor(255, 255, 255);
+	iText(15, 75, "Press r for resume.");
+	iSetColor(255, 255, 255);
+	iText(15, 50, "Press END for exit."); //screen controls
+
+	
+	if (gameover == 1) {
+		iClear();
+		iSetColor(255, 255, 255);
+		iText(500, 500, "Game Over");
+	}
+	//BYEEEEEE NOWRIN 
+}
+
+
+/*
+function iMouseMove() is called when the user presses and drags the mouse.
+(mx, my) is the position where the mouse pointer is.
+*/
+void iMouseMove(int mx, int my)
+{
+	//place your codes here
+}
+
+/*
+function iMouse() is called when the user presses/releases the mouse.
+(mx, my) is the position where the mouse pointer is.
+*/
+void iMouse(int button, int state, int mx, int my)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		//place your codes here
+	}
+	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+	{
+		//place your codes here
+	}
+}
+
+/*
+function iKeyboard() is called whenever the user hits a key in keyboard.
+key- holds the ASCII value of the key pressed.
+*/
+
+void iKeyboard(unsigned char key)
+{
+	if (key == 'p')
+	{
+		//do something with 'q'
+		iPauseTimer(0);
+	}
+	if (key == 'r')
+	{
+		iResumeTimer(0);
+	}
+	if (key == ' '){
+		if (tmp == 2) tmp = 1;
+		else tmp += 1;
+
+	}
+	//place your codes for other keys here
+}
+
+/*
+function iSpecialKeyboard() is called whenver user hits special keys like-
+function keys, home, end, pg up, pg down, arraows etc. you have to use
+appropriate constants to detect them. A list is:
+GLUT_KEY_F1, GLUT_KEY_F2, GLUT_KEY_F3, GLUT_KEY_F4, GLUT_KEY_F5, GLUT_KEY_F6,
+GLUT_KEY_F7, GLUT_KEY_F8, GLUT_KEY_F9, GLUT_KEY_F10, GLUT_KEY_F11, GLUT_KEY_F12,
+GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
+GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
+*/
+void iSpecialKeyboard(unsigned char key)
+{
+
+	if (key == GLUT_KEY_END)
+	{
+		exit(0);
+	}
+
+	if (key == GLUT_KEY_DOWN)
+	{
+		if (movedown(x, y) == 0){
+			dy = 0;
+		}
+		else {
+			if (y < 5) y = 6;
+			y -= 5;
+		}
+
+	}
+
+	if (key == GLUT_KEY_RIGHT)
+	{
+		if (x >= 699 - width);
+		else x += 20;
+
+	}
+	if (key == GLUT_KEY_LEFT)
+	{
+
+		if (x <= 300);
+		else x -= 20;
+
+	}
+
+	//place your codes for other keys here
+}
+
+
+void descend(){
+	y -= dy;
+	if (movedown(x, y) == 0){
+		dy = 0;
+		SetTetrisCoordinate(x, y, index, tmp);
+	}
+}
+
+
+int main()
+{
+	//place your own initialization codes here.
+	iSetTimer(5, descend);
+	dx = 10;
+	dy = 1;
+	iInitialize(1000, 700, "TETRIS");
+	if (score == 500) dy = 5; //level up 
+	if (score == 1000) dy = 10; //level up
+	return 0;
+}
